@@ -1,0 +1,58 @@
+CC = cl
+CFLAGS = /nologo /W4 /O2
+LD = $(CC)
+LDFLAGS = /nologo
+LIBS =
+
+OBJCORE = hawk_kgen.obj hawk_sign.obj hawk_vrfy.obj ng_fxp.obj ng_hawk.obj ng_mp31.obj ng_ntru.obj ng_poly.obj ng_zint31.obj sha3.obj
+HEAD = hawk.h hawk_inner.h hawk_config.h sha3.h
+NG_HEAD = ng_config.h ng_inner.h sha3.h
+OBJAPI = api.obj
+OBJEXTRA = PQCgenKAT_sign.obj rng.obj
+
+all: PQCgenKAT_sign.exe
+
+PQCgenKAT_sign.exe: $(OBJCORE) $(OBJAPI) $(OBJEXTRA)
+	$(LD) $(LDFLAGS) /Fe:PQCgenKAT_sign.exe $(OBJCORE) $(OBJAPI) $(OBJEXTRA) $(LIBS)
+
+clean:
+	-del /Q $(OBJCORE) $(OBJAPI) $(OBJEXTRA) PQCgenKAT_sign.exe
+
+hawk_kgen.obj: hawk_kgen.c $(HEAD)
+	$(CC) $(CFLAGS) /c /Fo:hawk_kgen.obj hawk_kgen.c
+
+hawk_sign.obj: hawk_sign.c $(HEAD)
+	$(CC) $(CFLAGS) /c /Fo:hawk_sign.obj hawk_sign.c
+
+hawk_vrfy.obj: hawk_vrfy.c $(HEAD)
+	$(CC) $(CFLAGS) /c /Fo:hawk_vrfy.obj hawk_vrfy.c
+
+ng_fxp.obj: ng_fxp.c $(NG_HEAD)
+	$(CC) $(CFLAGS) /c /Fo:ng_fxp.obj ng_fxp.c
+
+ng_hawk.obj: ng_hawk.c $(NG_HEAD)
+	$(CC) $(CFLAGS) /c /Fo:ng_hawk.obj ng_hawk.c
+
+ng_mp31.obj: ng_mp31.c $(NG_HEAD)
+	$(CC) $(CFLAGS) /c /Fo:ng_mp31.obj ng_mp31.c
+
+ng_ntru.obj: ng_ntru.c $(NG_HEAD)
+	$(CC) $(CFLAGS) /c /Fo:ng_ntru.obj ng_ntru.c
+
+ng_poly.obj: ng_poly.c $(NG_HEAD)
+	$(CC) $(CFLAGS) /c /Fo:ng_poly.obj ng_poly.c
+
+ng_zint31.obj: ng_zint31.c $(NG_HEAD)
+	$(CC) $(CFLAGS) /c /Fo:ng_zint31.obj ng_zint31.c
+
+sha3.obj: sha3.c $(NG_HEAD)
+	$(CC) $(CFLAGS) /c /Fo:sha3.obj sha3.c
+
+api.obj: api.c api.h hawk.h sha3.h
+	$(CC) $(CFLAGS) /c /Fo:api.obj api.c
+
+PQCgenKAT_sign.obj: PQCgenKAT_sign.c api.h rng.h
+	$(CC) $(CFLAGS) /c /Fo:PQCgenKAT_sign.obj PQCgenKAT_sign.c
+
+rng.obj: rng.c rng.h
+	$(CC) $(CFLAGS) /c /Fo:rng.obj rng.c

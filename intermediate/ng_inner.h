@@ -1,0 +1,1 @@
+../src/ng_inner.h
